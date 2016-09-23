@@ -5,8 +5,8 @@ from vizone import logging
 
 class Pool(object):
     def __init__(self, workers=1, join=True, timeout=60):
-        logging.info("Create pool with %i workers (%s, timeout=%i).",
-                     workers, 'join' if join else 'no join', timeout)
+        logging.info("Create pool with %i workers (%s, timeout=%s).",
+                     workers, 'join' if join else 'no join', str(timeout) if timeout else 'None')
         self.start_time = time.time()
 
         self.worker_count = workers
@@ -31,10 +31,10 @@ class Pool(object):
             for thread in self.threads.values():
                 thread.join(self.timeout)
                 logging.debug("Exit joined %s. (%s)", thread.name,
-                        "timed out" if thread.is_alive() else "ok")
+                              "timed out" if thread.is_alive() else "ok")
         total_time = time.time() - self.start_time
         logging.info("Ran %i tasks in %f seconds (avg %f seconds per task).",
-                self.counter, total_time, self.avg_time)
+                     self.counter, total_time, self.avg_time)
 
     def _control(self, thread):
         try:
@@ -44,7 +44,7 @@ class Pool(object):
             thread.join(self.timeout)
             end_time = time.time()
             logging.debug("Control thread joined %s. (%s)", thread.name,
-                    "timed out" if thread.is_alive() else "ok")
+                          "timed out" if thread.is_alive() else "ok")
 
             with self.timing_lock:
                 self.avg_time = (self.avg_time + (end_time - start_time)) / 2
@@ -77,7 +77,7 @@ class Pool(object):
                 return worker(*args, **kwargs)
 
             return wrapped
-        
+
         log_id = str(kwargs.get('log_id', 'x'))
         worker_thread = threading.Thread(
             target=with_local_log_id(worker),
@@ -90,7 +90,7 @@ class Pool(object):
         control_thread = threading.Thread(
             target=self._control,
             name='control_%s' % log_id,
-            args=(worker_thread, ),
+            args=(worker_thread,),
         )
         control_thread.daemon = True
 
@@ -104,7 +104,7 @@ class Pool(object):
 class LogId(object):
     """
     Thread-safe incrementer.
-    
+
     Use like this:
 
         log_id = LogId()
@@ -112,6 +112,7 @@ class LogId(object):
         next_id = log_id.next()
         # ...
     """
+
     def __init__(self):
         self._count = 0
         self._lock = threading.Lock()

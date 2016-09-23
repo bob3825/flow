@@ -85,6 +85,7 @@ if __name__ == '__main__':
     config.set('Flow', 'app name', 'default')
     config.set('Flow', 'class', None)
     config.set('Flow', 'workers', '1')
+    config.set('Flow', 'worker_timeout', '60')
 
     config.add_section('Source')
 
@@ -142,6 +143,9 @@ if __name__ == '__main__':
     # Set up multi-threading
     workers = args.workers or config.getint('Flow', 'workers')
     workers = max(workers, 1)
+    worker_timeout = config.getint('Flow', 'worker_timeout')
+    if worker_timeout == 0:
+        worker_timeout = None
 
     # Set up Logging
     logging_debug = config.get('Logging', 'level') == 'debug'
@@ -237,7 +241,7 @@ if __name__ == '__main__':
     # Run source.start multiple times as long as there are free workers in the
     # pool. Stop when source.next() raises StopIteration.
     elif issubclass(Flow.SOURCE, Iterable):
-        with Pool(workers=workers, join=True) as pool:
+        with Pool(workers=workers, join=True, timeout=worker_timeout) as pool:
             log_id = LogId()
 
             for obj in source:
@@ -251,7 +255,7 @@ if __name__ == '__main__':
     # event listener of some kind and will call the callback upon
     # external triggers.
     elif issubclass(Flow.SOURCE, EventBased):
-        with Pool(workers=workers, join=True) as pool:
+        with Pool(workers=workers, join=True, timeout=worker_timeout) as pool:
             log_id = LogId()
 
             def work(obj):
