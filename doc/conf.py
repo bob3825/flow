@@ -231,7 +231,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'flow.tex', u'flow Documentation',
-     u'Johan Egneblad', 'manual'),
+     u'Vizrt', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
