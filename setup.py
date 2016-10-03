@@ -1,7 +1,7 @@
 from setuptools import setup
 
 name_ = 'flow'
-version_ = '0.5'
+version_ = '0.6'
 packages_ = [
     'flow',
     'flow.source',
