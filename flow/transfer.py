@@ -1,6 +1,7 @@
 from . import Flow
 from .needs import NeedsClient
 from .source.local import STDIN
+from vizone.payload.transfer.transferstep import TransferStep
 
 
 class TransferPlugin(Flow, NeedsClient):
@@ -76,6 +77,9 @@ class TransferPlugin(Flow, NeedsClient):
         except AssertionError as e:
             self.fail(e.message)
 
+    def get_progress(self):
+        step = TransferStep(self.client.GET(self.step.self_link))
+        return step.state.state, step.progress.done
 
     def update_progress(self, progress):
         """

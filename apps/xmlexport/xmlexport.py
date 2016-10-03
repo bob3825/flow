@@ -1,3 +1,4 @@
+import os
 from flow.transfer import TransferPlugin
 from vizone.net.ftp import FXP, ftp_write, connect
 from vizone import logging
@@ -40,7 +41,7 @@ class XmlExportFXP(TransferPlugin):
         logging.info("Writing metadata...")
 
         # Write the Asset Metadata to the xml destination path
-        ftp_write(xml_destination, asset.describedby_link.metadata.generate())
+        ftp_write(xml_destination, self.asset.describedby_link.metadata.generate())
         logging.log("Metadata done", None, 'ok')
 
         # Set the progress to 100% and we're done
@@ -99,7 +100,7 @@ class XmlExportArdFTP(TransferPlugin):
         logging.info("Writing metadata...")
 
         # Write the Asset Metadata to the xml destination path
-        ftp_write(xml_destination, asset.describedby_link.metadata.generate())
+        ftp_write(xml_destination, self.asset.describedby_link.metadata.generate())
         logging.log("Metadata writing done", None, 'ok')
 
         # Set the progress to 100% and we're done
@@ -112,5 +113,5 @@ class XmlExportArdFTP(TransferPlugin):
                 with_percent, rest = status_line.split('%', 1)
                 status, value = with_percent.split(' ')
                 self.update_progress(value)
-        except e:
+        except Exception as e:
             logging.error("Error parsing status line from arftp: " + str(e))

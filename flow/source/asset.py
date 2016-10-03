@@ -1,5 +1,4 @@
 from vizone import logging
-from vizone.opensearch import FeedIterator
 from vizone.resource.asset import get_assets
 from vizone.payload.asset import Item
 
@@ -48,7 +47,7 @@ class AssetEntryListener(EventBased, NeedsClient, NeedsStomp):
 
 
 def _get_asset_stomp_url(client): 
-    assets = get_assets()
+    assets = get_assets(client=client)
     if assets.monitor_link is not None:
         return assets.monitor_link.href
     else:

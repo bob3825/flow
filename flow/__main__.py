@@ -233,7 +233,7 @@ if __name__ == '__main__':
     equip(app_name, viz_one_username, viz_one_password, args, client, config, Flow, flow)
 
     # Run source.run once, which should call the workers' start method once or
-    # more. No parallelisation is done here
+    # more. No parallelization is done here
     if issubclass(Flow.SOURCE, Once):
         obj = source.run()
         flow.start(obj)

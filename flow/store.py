@@ -1,4 +1,5 @@
 import json
+from vizone.client import HTTPServerError, HTTPClientError
 
 
 class Store(object):

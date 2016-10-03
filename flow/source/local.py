@@ -1,5 +1,4 @@
 import sys
-from vizone import logging
 from vizone.classutils import to_class
 
 from .. import Once

@@ -1,7 +1,10 @@
+import datetime
+
 from threading import Lock
 from vizone.client import HTTPClientError
 from vizone.payload.dictionary import Dictionary
 from vizone import logging
+from vizone.iso8601 import Timestamp
 
 
 class MultiParser(object):
@@ -30,7 +33,7 @@ class MultiParser(object):
         mp = MultiParser(type='date', format='%d/%m')
         result = mp.convert('4/12')
 
-    For a more thourough example using the MultiParser together with configuration,
+    For a more thorough example using the MultiParser together with configuration,
     please check out :class:`xmlimport.XmlImport`.
 
     For more information about date and time parsing syntax, please refer to
@@ -38,7 +41,7 @@ class MultiParser(object):
 
     Args:
         type (str): ``string|integer|float|iso|date|time|datetime|dictionary``
-        format (str): format string for parseing ``date``, ``time`` and ``datetime``
+        format (str): format string for parsing ``date``, ``time`` and ``datetime``
         default_timezone (str): default time zone only used fore ``datetime``
         source (str): url do ``dictionary``, should be an Atom-based feed
     """
@@ -65,7 +68,7 @@ class MultiParser(object):
 
     def convert(self, raw_value, client):
         """
-        Perform conversion configured when contructing the object.
+        Perform conversion configured when constructing the object.
 
         Args:
             raw_value (unicode): The raw string to parse

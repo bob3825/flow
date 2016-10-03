@@ -92,4 +92,3 @@ def in_window(start, end, now):
 
     else:
         return True
-        
