@@ -15,6 +15,7 @@ Contents:
    :maxdepth: 3
 
    introduction
+   installation
    apps
    sources
    utilities
