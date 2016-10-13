@@ -1,7 +1,4 @@
 from lxml import etree
-from datetime import date, time, datetime
-
-import sys
 
 from flow import Flow
 from flow.needs import NeedsStore, NeedsClient, NeedsConfig
@@ -15,7 +12,6 @@ from flow.lock import Locked
 from flow.data import MultiParser
 
 from vizone import logging
-from vizone.iso8601 import Timestamp
 from vizone.urilist import UriList
 from vizone.payload.asset import Item
 from vizone.payload.metadata import ImportExport
@@ -99,13 +95,13 @@ class XmlImport(Flow, NeedsClient, NeedsStore, NeedsConfig):
 
     .. code-block:: ini
 
-        [Transform]
+        [Transforms]
         NAME = EXPR
         compound_field = field1 + ':' + field2
 
-    The ``Transform`` section allows for simple data transformation. The left-hand side
+    The ``Transforms`` section allows for simple data transformation. The left-hand side
     denotes the name to store under and the right-hand side should contain a valid
-    python expression using the names from ``Field`` directives and previous ``Transform``
+    python expression using the names from ``Field`` directives and previous ``Transforms``
     operations. They will be carried out in the order they are written.
 
     .. code-block:: ini
