@@ -57,8 +57,9 @@ class Store(object):
 
         collection = client.servicedoc.get_collection_by_keyword('client-config')
         self._resolve = collection.get_resolve_by_id('client-config')
+        self._asset_resolve = collection.get_resolve_by_id('client-asset-config')
     
-    def get(self, key):
+    def get(self, key, atomid=None):
         """
         Get the value of a certain key for the object's application.
 
@@ -66,10 +67,9 @@ class Store(object):
             key (unicode): The key used for storage
 
         Returns:
-            dict: The storede value or ``None``
+            dict: The stored value or ``None``
         """
-        subs = {'vizid:application': self._appname}
-        resolve = self._resolve
+        resolve, subs = self._get_resolve_and_subs(atomid)
 
         response = self._client.GET(resolve.make_url(key, subs), check_status=False)
         if response.status_code == 404:
@@ -86,7 +86,7 @@ class Store(object):
         else:
             return None
 
-    def put(self, key, value):
+    def put(self, key, value, atomid=None):
         """
         Put a ``value`` under a ``key`` for the object's application.
 
@@ -95,23 +95,32 @@ class Store(object):
             value (dict): The data to store, as a dict
 
         Returns:
-            dict: The storede value is returned
+            dict: The stored value is returned
         """
         value = json.dumps(value)
-        subs = {'vizid:application': self._appname}
-        resolve = self._resolve
+        resolve, subs = self._get_resolve_and_subs(atomid)
 
         self._client.PUT(resolve.make_url(key, subs), value, {'Content-Type': 'application/octet-stream'})
         return value
 
-    def delete(self, key):
+    def delete(self, key, atomid=None):
         """
         Delete the stored ``value`` under a ``key`` for the object's application.
 
         Args:
             key (unicode): The key to delete
         """
-        subs = {'vizid:application': self._appname}
-        resolve = self._resolve
+        resolve, subs = self._get_resolve_and_subs(atomid)
 
         self._client.DELETE(resolve.make_url(key, subs))
+
+    def _get_resolve_and_subs(self, atomid):
+
+        if atomid:
+            subs = {'vizid:application': self._appname, 'vizid:atom-id': atomid}
+            resolve = self._asset_resolve
+        else:
+            subs = {'vizid:application': self._appname}
+            resolve = self._resolve
+
+        return resolve, subs
